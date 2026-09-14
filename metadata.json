@@ -1,0 +1,6 @@
+{
+  "name": "Cubelelo Price Tracker & Telegram Notifier",
+  "description": "Real-time Cubelelo speedcube price and stock tracking system with automated Telegram notifications via @abisundar_bot.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -199,8 +199,12 @@ async function startServer() {
   // Check single product now
   app.post('/api/products/:id/check', async (req, res) => {
     try {
-      const { forceAlert } = req.body || {};
-      const result = await checkSingleProduct(req.params.id, { forceAlert });
+      const { forceAlert, forceAlertBelowTarget } = req.body || {};
+      const result = await checkSingleProduct(req.params.id, {
+        forceAlert: Boolean(forceAlert),
+        forceAlertBelowTarget: forceAlertBelowTarget !== false,
+        isManual: true,
+      });
       res.json(result);
     } catch (err: any) {
       res.status(500).json({ error: err.message || 'Check failed.' });
@@ -210,7 +214,11 @@ async function startServer() {
   // Check all products now
   app.post('/api/products/check-all', async (req, res) => {
     try {
-      const result = await checkAllProducts();
+      const { forceAlertBelowTarget } = req.body || {};
+      const result = await checkAllProducts({
+        forceAlertBelowTarget: forceAlertBelowTarget !== false,
+        isManual: true,
+      });
       res.json(result);
     } catch (err: any) {
       res.status(500).json({ error: err.message || 'Check all failed.' });

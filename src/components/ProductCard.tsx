@@ -41,6 +41,7 @@ export function ProductCard({
   const [isEditingTarget, setIsEditingTarget] = useState(false);
   const [targetInput, setTargetInput] = useState(product.targetPrice.toString());
   const [imgError, setImgError] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const isBelowTarget = product.inStock && product.currentPrice <= product.targetPrice;
   const discountPercent =
@@ -354,13 +355,34 @@ export function ProductCard({
 
         <div className="flex items-center gap-2">
           {/* Delete */}
-          <button
-            onClick={() => onDelete(product.id)}
-            className="p-2 text-slate-400 hover:text-rose-600 hover:bg-white rounded-lg border border-transparent hover:border-slate-200 transition-colors"
-            title="Remove from tracking"
-          >
-            <Trash2 className="w-4 h-4" />
-          </button>
+          {showDeleteConfirm ? (
+            <div className="flex items-center gap-1 bg-rose-50 border border-rose-200 px-2 py-1 rounded-lg">
+              <span className="text-[11px] font-semibold text-rose-700">Delete?</span>
+              <button
+                onClick={() => {
+                  setShowDeleteConfirm(false);
+                  onDelete(product.id);
+                }}
+                className="px-1.5 py-0.5 text-[10px] font-bold bg-rose-600 hover:bg-rose-700 text-white rounded transition-colors"
+              >
+                Yes
+              </button>
+              <button
+                onClick={() => setShowDeleteConfirm(false)}
+                className="px-1.5 py-0.5 text-[10px] font-medium bg-slate-200 hover:bg-slate-300 text-slate-700 rounded transition-colors"
+              >
+                No
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => setShowDeleteConfirm(true)}
+              className="p-2 text-slate-400 hover:text-rose-600 hover:bg-white rounded-lg border border-transparent hover:border-slate-200 transition-colors"
+              title="Remove from tracking"
+            >
+              <Trash2 className="w-4 h-4" />
+            </button>
+          )}
 
           {/* Buy on Cubelelo */}
           <a

@@ -53,9 +53,9 @@ export default function App() {
   const [historyProduct, setHistoryProduct] = useState<TrackedProduct | null>(null);
 
   // Toast notification
-  const [toast, setToast] = useState<{ message: string; type: 'success' | 'info' | 'error' } | null>(null);
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'info' | 'error' | 'warning' } | null>(null);
 
-  const showToast = (message: string, type: 'success' | 'info' | 'error' = 'info') => {
+  const showToast = (message: string, type: 'success' | 'info' | 'error' | 'warning' = 'info') => {
     setToast({ message, type });
     setTimeout(() => {
       setToast(null);
@@ -111,14 +111,25 @@ export default function App() {
   const handleCheckAll = async () => {
     setIsCheckingAll(true);
     try {
-      const res = await fetch('/api/products/check-all', { method: 'POST' });
+      const res = await fetch('/api/products/check-all', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ forceAlertBelowTarget: true }),
+      });
       const data = await res.json();
       if (res.ok) {
-        showToast(
-          `Checked ${data.checkedCount} speedcubes. ${data.alertsSent} Telegram alert(s) sent!`,
-          'success'
-        );
-        loadAllData();
+        if (data.alertsSent > 0) {
+          showToast(
+            `Checked ${data.checkedCount} speedcubes. Dispatched ${data.alertsSent} Telegram alert(s)!`,
+            'success'
+          );
+        } else {
+          showToast(
+            `Checked ${data.checkedCount} speedcube(s). All prices up-to-date.`,
+            'info'
+          );
+        }
+        await loadAllData();
       } else {
         showToast(data.error || 'Failed to check products', 'error');
       }
@@ -134,7 +145,7 @@ export default function App() {
       const res = await fetch(`/api/products/${id}/check`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({}),
+        body: JSON.stringify({ forceAlertBelowTarget: true }),
       });
       const data = await res.json();
       if (res.ok) {
@@ -143,12 +154,17 @@ export default function App() {
         );
         if (data.alertSent) {
           showToast(
-            `Price alert sent to Telegram for "${data.product.title}"!`,
+            `Price alert sent to Telegram for "${data.product.title}"! (₹${data.product.currentPrice} <= ₹${data.product.targetPrice})`,
             'success'
           );
           // reload alerts
           const alertRes = await fetch('/api/alerts');
           if (alertRes.ok) setAlerts(await alertRes.json());
+        } else if (data.alertError) {
+          showToast(
+            `Checked price: ₹${data.product.currentPrice}. Alert error: ${data.alertError}`,
+            'warning'
+          );
         } else {
           showToast(`Checked price: ₹${data.product.currentPrice}`, 'info');
         }
@@ -218,14 +234,14 @@ export default function App() {
   };
 
   const handleDeleteProduct = async (id: string) => {
-    const p = products.find((x) => x.id === id);
-    if (!window.confirm(`Stop tracking "${p?.title || 'this cube'}"?`)) return;
-
     try {
       const res = await fetch(`/api/products/${id}`, { method: 'DELETE' });
       if (res.ok) {
         setProducts((prev) => prev.filter((x) => x.id !== id));
         showToast('Product removed from tracking', 'info');
+      } else {
+        const data = await res.json().catch(() => ({}));
+        showToast(data.error || 'Failed to remove product', 'error');
       }
     } catch (err: any) {
       showToast(err.message || 'Delete failed', 'error');
@@ -280,10 +296,17 @@ export default function App() {
   };
 
   const handleClearAlerts = async () => {
-    const res = await fetch('/api/alerts', { method: 'DELETE' });
-    if (res.ok) {
-      setAlerts([]);
-      showToast('Alerts history cleared', 'info');
+    try {
+      const res = await fetch('/api/alerts', { method: 'DELETE' });
+      if (res.ok) {
+        setAlerts([]);
+        showToast('Notification history cleared', 'info');
+      } else {
+        const data = await res.json().catch(() => ({}));
+        showToast(data.error || 'Failed to clear notifications', 'error');
+      }
+    } catch (err: any) {
+      showToast(err.message || 'Error clearing notifications', 'error');
     }
   };
 
@@ -331,12 +354,16 @@ export default function App() {
               ? 'bg-emerald-600 text-white border-emerald-700'
               : toast.type === 'error'
               ? 'bg-rose-600 text-white border-rose-700'
+              : toast.type === 'warning'
+              ? 'bg-amber-600 text-white border-amber-700'
               : 'bg-slate-900 text-white border-slate-800'
           }`}
         >
           {toast.type === 'success' ? (
             <CheckCircle2 className="w-4 h-4" />
           ) : toast.type === 'error' ? (
+            <AlertTriangle className="w-4 h-4" />
+          ) : toast.type === 'warning' ? (
             <AlertTriangle className="w-4 h-4" />
           ) : (
             <Zap className="w-4 h-4" />

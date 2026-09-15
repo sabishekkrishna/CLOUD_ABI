@@ -49,7 +49,7 @@
       "targetPrice": 1700,
       "inStock": true,
       "alertEnabled": true,
-      "lastChecked": "2026-09-14T19:54:45.770Z",
+      "lastChecked": "2026-09-15T18:23:20.680Z",
       "lastStatus": "price_drop",
       "priceHistory": [
         {
@@ -58,7 +58,8 @@
           "inStock": true
         }
       ],
-      "createdAt": "2026-09-14T19:54:45.770Z"
+      "createdAt": "2026-09-14T19:54:45.770Z",
+      "lastAlertSentAt": "2026-09-15T18:23:20.680Z"
     },
     {
       "id": "moyu-rs3m-v5-se",
@@ -93,7 +94,7 @@
       "targetPrice": 1000,
       "inStock": true,
       "alertEnabled": true,
-      "lastChecked": "2026-09-14T19:54:37.534Z",
+      "lastChecked": "2026-09-15T18:23:22.119Z",
       "lastStatus": "ok",
       "priceHistory": [
         {
@@ -120,7 +121,7 @@
     "telegramToken": "8626358272:AAFLLaCE57Z36uEYQsmIbPM9em0ZWtZJuxU",
     "telegramChatId": "7233187236",
     "botUsername": "abisundar_bot",
-    "checkIntervalMinutes": 30,
+    "checkIntervalMinutes": 1440,
     "autoCheckEnabled": true,
     "notifyOnStock": true,
     "hasTokenConfigured": true,
@@ -128,107 +129,16 @@
   },
   "alerts": [
     {
-      "id": "alert-1789415678465-y9yj2",
-      "timestamp": "2026-09-14T19:54:37.534Z",
-      "productId": "moyu-rs3m-v5-se",
-      "productTitle": "MoYu RS3M v5 SE (Magnetic)",
-      "currentPrice": 2999,
-      "targetPrice": 1000,
-      "variantTitle": "MagLev, Ball Core, UV Coated",
+      "id": "alert-1789496601588-03zzk",
+      "timestamp": "2026-09-15T18:23:20.680Z",
+      "productId": "prod-moyu-aolong-v5-3x3-magnetic-1789415685770",
+      "productTitle": "MoYu AoLong v5 3x3 M",
+      "currentPrice": 1699,
+      "targetPrice": 1700,
+      "variantTitle": "Magnetic",
       "type": "price_drop",
       "success": true,
-      "messageText": "🚨 <b>CUBELELO SPEEDCUBE NOTIFICATION</b> 🧩\n\nItem: <b>MoYu RS3M v5 SE (Magnetic) (MagLev, Ball Core, UV Coated)</b>\nCurrent Price: <b>₹2,999</b>\nTarget Threshold: ₹1,000\n💰 <b>Discount:</b> 14% OFF (M.R.P: ₹3,499)\n\n🛒 <a href=\"https://www.cubelelo.com/products/moyu-rs3m-v5-se-magnetic\">Buy on Cubelelo</a>\n\n<i>Notified via @abisundar_bot tracker</i>"
-    },
-    {
-      "id": "alert-1789415667804-2nx8j",
-      "timestamp": "2026-09-14T19:54:27.073Z",
-      "productId": "moyu-rs3m-v5-se",
-      "productTitle": "MoYu RS3M v5 SE (Magnetic)",
-      "currentPrice": 2999,
-      "targetPrice": 1000,
-      "variantTitle": "MagLev, Ball Core, UV Coated",
-      "type": "price_drop",
-      "success": false,
-      "error": "Bad Request: can't parse entities: Can't find end of the entity starting at byte offset 314",
-      "messageText": "🚨 *PRICE DROP ALERT!* 🧩\n\nItem: *MoYu RS3M v5 SE (Magnetic) (MagLev, Ball Core, UV Coated)*\nCurrent Price: *₹2,999*\nTarget Threshold: ₹1,000\n💰 *Discount:* 14% OFF (M.R.P: ₹3,499)\n\n🛒 [Buy on Cubelelo](https://www.cubelelo.com/products/moyu-rs3m-v5-se-magnetic)\n\n_Notified via @abisundar_bot tracker_"
-    },
-    {
-      "id": "alert-1789415471468-j9jmk",
-      "timestamp": "2026-09-14T19:51:10.754Z",
-      "productId": "moyu-rs3m-v5-se",
-      "productTitle": "MoYu RS3M v5 SE (Magnetic)",
-      "currentPrice": 2999,
-      "targetPrice": 1000,
-      "variantTitle": "MagLev, Ball Core, UV Coated",
-      "type": "price_drop",
-      "success": false,
-      "error": "Bad Request: can't parse entities: Can't find end of the entity starting at byte offset 314",
-      "messageText": "🚨 *PRICE DROP ALERT!* 🧩\n\nItem: *MoYu RS3M v5 SE (Magnetic) (MagLev, Ball Core, UV Coated)*\nCurrent Price: *₹2,999*\nTarget Threshold: ₹1,000\n💰 *Discount:* 14% OFF (M.R.P: ₹3,499)\n\n🛒 [Buy on Cubelelo](https://www.cubelelo.com/products/moyu-rs3m-v5-se-magnetic)\n\n_Notified via @abisundar_bot tracker_"
-    },
-    {
-      "id": "alert-1789415342074-0wisq",
-      "timestamp": "2026-09-14T19:49:01.363Z",
-      "productId": "moyu-rs3m-v5-se",
-      "productTitle": "MoYu RS3M v5 SE (Magnetic)",
-      "currentPrice": 2999,
-      "targetPrice": 1000,
-      "variantTitle": "MagLev, Ball Core, UV Coated",
-      "type": "price_drop",
-      "success": false,
-      "error": "Bad Request: can't parse entities: Can't find end of the entity starting at byte offset 314",
-      "messageText": "🚨 *PRICE DROP ALERT!* 🧩\n\nItem: *MoYu RS3M v5 SE (Magnetic) (MagLev, Ball Core, UV Coated)*\nCurrent Price: *₹2,999*\nTarget Threshold: ₹1,000\n💰 *Discount:* 14% OFF (M.R.P: ₹3,499)\n\n🛒 [Buy on Cubelelo](https://www.cubelelo.com/products/moyu-rs3m-v5-se-magnetic)\n\n_Notified via @abisundar_bot tracker_"
-    },
-    {
-      "id": "alert-1789415252723-hkul3",
-      "timestamp": "2026-09-14T19:47:32.008Z",
-      "productId": "moyu-rs3m-v5-se",
-      "productTitle": "MoYu RS3M v5 SE (Magnetic)",
-      "currentPrice": 2999,
-      "targetPrice": 1000,
-      "variantTitle": "MagLev, Ball Core, UV Coated",
-      "type": "price_drop",
-      "success": false,
-      "error": "Bad Request: can't parse entities: Can't find end of the entity starting at byte offset 314",
-      "messageText": "🚨 *PRICE DROP ALERT!* 🧩\n\nItem: *MoYu RS3M v5 SE (Magnetic) (MagLev, Ball Core, UV Coated)*\nCurrent Price: *₹2,999*\nTarget Threshold: ₹1,000\n💰 *Discount:* 14% OFF (M.R.P: ₹3,499)\n\n🛒 [Buy on Cubelelo](https://www.cubelelo.com/products/moyu-rs3m-v5-se-magnetic)\n\n_Notified via @abisundar_bot tracker_"
-    },
-    {
-      "id": "alert-1789415243366-gky1z",
-      "timestamp": "2026-09-14T19:47:22.159Z",
-      "productId": "moyu-rs3m-v5-se",
-      "productTitle": "MoYu RS3M v5 SE (Magnetic)",
-      "currentPrice": 2999,
-      "targetPrice": 1000,
-      "variantTitle": "MagLev, Ball Core, UV Coated",
-      "type": "price_drop",
-      "success": false,
-      "error": "Bad Request: can't parse entities: Can't find end of the entity starting at byte offset 314",
-      "messageText": "🚨 *PRICE DROP ALERT!* 🧩\n\nItem: *MoYu RS3M v5 SE (Magnetic) (MagLev, Ball Core, UV Coated)*\nCurrent Price: *₹2,999*\nTarget Threshold: ₹1,000\n💰 *Discount:* 14% OFF (M.R.P: ₹3,499)\n\n🛒 [Buy on Cubelelo](https://www.cubelelo.com/products/moyu-rs3m-v5-se-magnetic)\n\n_Notified via @abisundar_bot tracker_"
-    },
-    {
-      "id": "alert-1789415172089-0757o",
-      "timestamp": "2026-09-14T19:46:11.380Z",
-      "productId": "moyu-rs3m-v5-se",
-      "productTitle": "MoYu RS3M v5 SE (Magnetic)",
-      "currentPrice": 2999,
-      "targetPrice": 1000,
-      "variantTitle": "MagLev, Ball Core, UV Coated",
-      "type": "price_drop",
-      "success": false,
-      "error": "Not Found",
-      "messageText": "🚨 *PRICE DROP ALERT!* 🧩\n\nItem: *MoYu RS3M v5 SE (Magnetic) (MagLev, Ball Core, UV Coated)*\nCurrent Price: *₹2,999*\nTarget Threshold: ₹1,000\n💰 *Discount:* 14% OFF (M.R.P: ₹3,499)\n\n🛒 [Buy on Cubelelo](https://www.cubelelo.com/products/moyu-rs3m-v5-se-magnetic)\n\n_Notified via @abisundar_bot tracker_"
-    },
-    {
-      "id": "alert-1789415138833-c0wbd",
-      "timestamp": "2026-09-14T19:45:38.105Z",
-      "productId": "moyu-rs3m-v5-se",
-      "productTitle": "MoYu RS3M v5 SE (Magnetic)",
-      "currentPrice": 2999,
-      "targetPrice": 3000,
-      "variantTitle": "MagLev, Ball Core, UV Coated",
-      "type": "price_drop",
-      "success": false,
-      "error": "Not Found",
-      "messageText": "🚨 *PRICE DROP ALERT!* 🧩\n\nItem: *MoYu RS3M v5 SE (Magnetic) (MagLev, Ball Core, UV Coated)*\nCurrent Price: *₹2,999*\nTarget Threshold: ₹3,000\n💰 *Discount:* 14% OFF (M.R.P: ₹3,499)\n\n🛒 [Buy on Cubelelo](https://www.cubelelo.com/products/moyu-rs3m-v5-se-magnetic)\n\n_Notified via @abisundar_bot tracker_"
+      "messageText": "🚨 <b>CUBELELO SPEEDCUBE NOTIFICATION</b> 🧩\n\nItem: <b>MoYu AoLong v5 3x3 M (Magnetic)</b>\nCurrent Price: <b>₹1,699</b>\nTarget Threshold: ₹1,700\n💰 <b>Discount:</b> 15% OFF (M.R.P: ₹1,999)\n\n🛒 <a href=\"https://www.cubelelo.com/products/moyu-aolong-v5-3x3-magnetic\">Buy on Cubelelo</a>\n\n<i>Notified via @abisundar_bot tracker</i>"
     }
   ]
 }

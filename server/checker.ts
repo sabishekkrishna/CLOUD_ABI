@@ -18,7 +18,7 @@ let isCheckingAll = false;
 
 export async function checkSingleProduct(
   productId: string,
-  options: { forceAlert?: boolean } = {}
+  options: { forceAlert?: boolean; forceAlertBelowTarget?: boolean; isManual?: boolean } = {}
 ): Promise<{
   product: TrackedProduct;
   alertSent: boolean;
@@ -78,10 +78,23 @@ export async function checkSingleProduct(
 
     // Check if we should send Telegram notification
     const canSend = settings.hasTokenConfigured && settings.hasChatIdConfigured;
+    const isManualOrForced = Boolean(options.forceAlert || options.forceAlertBelowTarget || options.isManual);
+
+    // Trigger alert if:
+    // 1. Force alert requested (manual button test)
+    // 2. Or notifications enabled for product:
+    //    - If currently below target price:
+    //        * Always send when manually checked or "Check All" clicked
+    //        * On background cron: send if first time or price dropped further
+    //    - If became in stock and notifyOnStock is enabled
     const shouldAlert =
       options.forceAlert ||
-      (product.alertEnabled &&
-        ((priceDroppedBelowTarget && (!product.lastAlertSentAt || isPriceChanged)) ||
+      (product.alertEnabled !== false &&
+        ((priceDroppedBelowTarget &&
+          (options.forceAlertBelowTarget ||
+            options.isManual ||
+            !product.lastAlertSentAt ||
+            isPriceChanged)) ||
           (becameInStock && settings.notifyOnStock)));
 
     if (shouldAlert) {
@@ -107,7 +120,7 @@ export async function checkSingleProduct(
             originalPrice,
             url: product.url,
             botUsername: settings.botUsername,
-            isManualTrigger: Boolean(options.forceAlert),
+            isManualTrigger: isManualOrForced,
           });
         }
 
@@ -190,7 +203,12 @@ export async function checkSingleProduct(
   }
 }
 
-export async function checkAllProducts(): Promise<{
+export async function checkAllProducts(
+  options: { forceAlertBelowTarget?: boolean; isManual?: boolean } = {
+    forceAlertBelowTarget: true,
+    isManual: true,
+  }
+): Promise<{
   checkedCount: number;
   alertsSent: number;
   errors: Array<{ id: string; error: string }>;
@@ -207,13 +225,16 @@ export async function checkAllProducts(): Promise<{
   try {
     for (const prod of products) {
       try {
-        const res = await checkSingleProduct(prod.id);
+        const res = await checkSingleProduct(prod.id, {
+          forceAlertBelowTarget: options.forceAlertBelowTarget !== false,
+          isManual: options.isManual !== false,
+        });
         if (res.alertSent) alertsSent++;
         if (res.alertError && !res.alertSent) {
           errors.push({ id: prod.id, error: res.alertError });
         }
-        // Small 1s delay between requests to be respectful to Cubelelo's servers
-        await new Promise((r) => setTimeout(r, 1000));
+        // Small 400ms delay between requests to be respectful to Cubelelo's servers
+        await new Promise((r) => setTimeout(r, 400));
       } catch (e: any) {
         errors.push({ id: prod.id, error: e.message || String(e) });
       }
@@ -246,7 +267,7 @@ export function setupBackgroundChecker(): void {
 
   checkIntervalHandle = setInterval(() => {
     console.log('[Checker] Triggering scheduled background check of all products...');
-    checkAllProducts().catch((err) => {
+    checkAllProducts({ forceAlertBelowTarget: false, isManual: false }).catch((err) => {
       console.error('[Checker] Background check failed:', err);
     });
   }, intervalMs);

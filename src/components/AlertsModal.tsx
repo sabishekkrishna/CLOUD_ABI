@@ -29,17 +29,17 @@ export function AlertsModal({
 }: AlertsModalProps) {
   const [expandedAlertId, setExpandedAlertId] = useState<string | null>(null);
   const [isClearing, setIsClearing] = useState(false);
+  const [showConfirmClear, setShowConfirmClear] = useState(false);
 
   if (!isOpen) return null;
 
   const handleClear = async () => {
-    if (window.confirm('Clear all alert notification history?')) {
-      setIsClearing(true);
-      try {
-        await onClearAlerts();
-      } finally {
-        setIsClearing(false);
-      }
+    setIsClearing(true);
+    try {
+      await onClearAlerts();
+      setShowConfirmClear(false);
+    } finally {
+      setIsClearing(false);
     }
   };
 
@@ -67,15 +67,38 @@ export function AlertsModal({
           </div>
           <div className="flex items-center gap-2">
             {alerts.length > 0 && (
-              <button
-                onClick={handleClear}
-                disabled={isClearing}
-                className="p-1.5 text-xs font-medium text-slate-500 hover:text-rose-600 rounded-lg hover:bg-slate-100 transition-colors flex items-center gap-1"
-                title="Clear alerts log"
-              >
-                <Trash2 className="w-4 h-4" />
-                <span className="hidden sm:inline">Clear</span>
-              </button>
+              <>
+                {showConfirmClear ? (
+                  <div className="flex items-center gap-1.5 bg-rose-50 border border-rose-200 px-2.5 py-1 rounded-lg">
+                    <span className="text-xs font-semibold text-rose-700">
+                      Clear all {alerts.length}?
+                    </span>
+                    <button
+                      onClick={handleClear}
+                      disabled={isClearing}
+                      className="px-2 py-0.5 text-xs font-bold text-white bg-rose-600 hover:bg-rose-700 rounded transition-colors disabled:opacity-50"
+                    >
+                      {isClearing ? 'Clearing...' : 'Yes, Clear'}
+                    </button>
+                    <button
+                      onClick={() => setShowConfirmClear(false)}
+                      disabled={isClearing}
+                      className="px-2 py-0.5 text-xs font-medium text-slate-600 hover:text-slate-900 bg-slate-200 hover:bg-slate-300 rounded transition-colors"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => setShowConfirmClear(true)}
+                    className="p-1.5 text-xs font-medium text-slate-600 hover:text-rose-600 rounded-lg hover:bg-rose-50 hover:border-rose-200 border border-transparent transition-colors flex items-center gap-1"
+                    title="Clear notification history"
+                  >
+                    <Trash2 className="w-4 h-4 text-rose-500" />
+                    <span className="hidden sm:inline font-semibold">Clear History</span>
+                  </button>
+                )}
+              </>
             )}
             <button
               onClick={onClose}

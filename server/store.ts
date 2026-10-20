@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { TrackedProduct, TrackerSettings, AlertLog } from '../src/types.ts';
+import type { TrackedProduct, TrackerSettings, AlertLog } from '../src/types.ts';
 
 interface StoreData {
   products: TrackedProduct[];
@@ -8,8 +8,37 @@ interface StoreData {
   alerts: AlertLog[];
 }
 
-const DATA_DIR = path.join(process.cwd(), 'data');
-const DATA_FILE = path.join(DATA_DIR, 'tracker_data.json');
+function resolveDataDir(): string {
+  if (process.env.DATA_DIR) {
+    return process.env.DATA_DIR;
+  }
+  if (process.env.AWS_LAMBDA_FUNCTION_NAME || process.env.VERCEL) {
+    return path.join('/tmp', 'cubelelo_data');
+  }
+  const defaultDir = path.join(process.cwd(), 'data');
+  try {
+    if (!fs.existsSync(defaultDir)) {
+      fs.mkdirSync(defaultDir, { recursive: true });
+    }
+    const testFile = path.join(defaultDir, '.write_test');
+    fs.writeFileSync(testFile, 'ok', 'utf-8');
+    fs.unlinkSync(testFile);
+    return defaultDir;
+  } catch {
+    const tmpDir = path.join('/tmp', 'cubelelo_data');
+    try {
+      if (!fs.existsSync(tmpDir)) {
+        fs.mkdirSync(tmpDir, { recursive: true });
+      }
+      return tmpDir;
+    } catch {
+      return defaultDir;
+    }
+  }
+}
+
+export const DATA_DIR = resolveDataDir();
+export const DATA_FILE = path.join(DATA_DIR, 'tracker_data.json');
 
 const DEFAULT_SETTINGS: TrackerSettings = {
   telegramToken: process.env.TELEGRAM_TOKEN || '',

@@ -14,7 +14,7 @@
         {
           "id": 52867770319137,
           "title": "Magnetic",
-          "price": 1699,
+          "price": 1999,
           "compareAtPrice": 1999,
           "available": true,
           "sku": "1031013"
@@ -22,7 +22,7 @@
         {
           "id": 52867797778721,
           "title": "Magnetic UV",
-          "price": 2149,
+          "price": 2499,
           "compareAtPrice": 2499,
           "available": true,
           "sku": "1031014"
@@ -30,7 +30,7 @@
         {
           "id": 52867797811489,
           "title": "8 Magnet Ball Core MagLev UV",
-          "price": 3599,
+          "price": 3999,
           "compareAtPrice": 3999,
           "available": true,
           "sku": "1031015"
@@ -38,23 +38,28 @@
         {
           "id": 52867797844257,
           "title": "20 Magnet Ball Core MagLev UV",
-          "price": 4299,
+          "price": 4799,
           "compareAtPrice": 4799,
           "available": true,
           "sku": "1031016"
         }
       ],
-      "currentPrice": 1699,
+      "currentPrice": 1999,
       "originalPrice": 1999,
       "targetPrice": 1700,
       "inStock": true,
       "alertEnabled": true,
-      "lastChecked": "2026-09-15T18:23:20.680Z",
-      "lastStatus": "price_drop",
+      "lastChecked": "2026-10-20T13:31:45.802Z",
+      "lastStatus": "ok",
       "priceHistory": [
         {
           "timestamp": "2026-09-14T19:54:45.770Z",
           "price": 1699,
+          "inStock": true
+        },
+        {
+          "timestamp": "2026-10-20T13:31:45.802Z",
+          "price": 1999,
           "inStock": true
         }
       ],
@@ -94,7 +99,7 @@
       "targetPrice": 1000,
       "inStock": true,
       "alertEnabled": true,
-      "lastChecked": "2026-09-15T18:23:22.119Z",
+      "lastChecked": "2026-10-20T13:31:46.348Z",
       "lastStatus": "ok",
       "priceHistory": [
         {

@@ -11,7 +11,7 @@ import {
   formatPriceDropMessage,
   formatStockAlertMessage,
 } from './telegram.ts';
-import { TrackedProduct } from '../src/types.ts';
+import type { TrackedProduct } from '../src/types.ts';
 
 let checkIntervalHandle: NodeJS.Timeout | null = null;
 let isCheckingAll = false;

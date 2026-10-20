@@ -12,6 +12,7 @@ import {
   getAlerts,
   clearAlerts,
   addAlertLog,
+  DATA_DIR,
 } from './server/store.ts';
 import { scrapeCubeleloProduct } from './server/scraper.ts';
 import {
@@ -23,21 +24,74 @@ import {
   sendTelegramMessage,
   formatTestMessage,
 } from './server/telegram.ts';
-import { TrackedProduct } from './src/types.ts';
+import type { TrackedProduct } from './src/types.ts';
 
 async function startServer() {
   const app = express();
-  const PORT = 3000;
+  const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 
   app.use(express.json());
 
-  // Health check endpoint
-  app.get('/api/health', (req, res) => {
+  // Health check endpoints for serverless and container orchestrators (Cloud Run, Kubernetes, Render, etc.)
+  const handleHealth = (req: express.Request, res: express.Response) => {
     res.json({
       status: 'ok',
       service: 'cubelelo-tracker',
+      uptimeSeconds: Math.floor(process.uptime()),
       timestamp: new Date().toISOString(),
+      nodeVersion: process.version,
+      port: PORT,
     });
+  };
+  app.get('/api/health', handleHealth);
+  app.get('/healthz', handleHealth);
+
+  // Deployment information for UI
+  app.get('/api/deployment-info', (req, res) => {
+    res.json({
+      isProduction: process.env.NODE_ENV === 'production',
+      port: PORT,
+      nodeVersion: process.version,
+      uptimeSeconds: Math.floor(process.uptime()),
+      cronSecretConfigured: Boolean(process.env.CRON_SECRET),
+      dataDir: DATA_DIR,
+      appUrl: process.env.APP_URL || '',
+      telegramBot: process.env.TELEGRAM_TOKEN ? 'configured via env' : 'in-store config',
+    });
+  });
+
+  // Cloud Scheduler / Serverless Cron Trigger Endpoint
+  // Allows external services (Cloud Scheduler, GitHub Actions, Cron-Job.org)
+  // to invoke price checks periodically even when serverless scales to zero
+  app.all(['/api/cron/check', '/api/cron'], async (req, res) => {
+    const cronSecret = process.env.CRON_SECRET;
+    const authHeader = req.headers.authorization;
+    const querySecret = req.query.secret;
+
+    if (cronSecret) {
+      const bearer = authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : null;
+      if (bearer !== cronSecret && querySecret !== cronSecret) {
+        res.status(401).json({ error: 'Unauthorized: Invalid CRON_SECRET token.' });
+        return;
+      }
+    }
+
+    try {
+      const startTime = Date.now();
+      const result = await checkAllProducts({
+        forceAlertBelowTarget: true,
+        isManual: true,
+      });
+      const durationMs = Date.now() - startTime;
+      res.json({
+        success: true,
+        trigger: 'serverless-cron',
+        durationMs,
+        ...result,
+      });
+    } catch (err: any) {
+      res.status(500).json({ success: false, error: err.message || 'Serverless cron check failed.' });
+    }
   });
 
   // Overview status
@@ -340,9 +394,26 @@ async function startServer() {
     });
   }
 
-  app.listen(PORT, '0.0.0.0', () => {
-    console.log(`[Server] Cubelelo Tracker running on http://0.0.0.0:${PORT}`);
+  const server = app.listen(PORT, '0.0.0.0', () => {
+    console.log(`[Server] Cubelelo Tracker running on http://0.0.0.0:${PORT} (ENV: ${process.env.NODE_ENV || 'development'})`);
   });
+
+  // Graceful shutdown handling for cloud containers (Cloud Run, Docker, Kubernetes)
+  const shutdown = (signal: string) => {
+    console.log(`[Server] ${signal} signal received. Closing HTTP server gracefully...`);
+    server.close(() => {
+      console.log('[Server] HTTP server closed cleanly. Exiting.');
+      process.exit(0);
+    });
+    // Force close after 10 seconds if still pending
+    setTimeout(() => {
+      console.error('[Server] Could not close connections in time, forcefully shutting down');
+      process.exit(1);
+    }, 10000);
+  };
+
+  process.on('SIGTERM', () => shutdown('SIGTERM'));
+  process.on('SIGINT', () => shutdown('SIGINT'));
 }
 
 startServer();

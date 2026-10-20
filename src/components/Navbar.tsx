@@ -9,8 +9,9 @@ import {
   AlertCircle,
   ExternalLink,
   Code2,
+  Cloud,
 } from 'lucide-react';
-import { TrackerSettings } from '../types.ts';
+import type { TrackerSettings } from '../types.ts';
 
 interface NavbarProps {
   settings: TrackerSettings;
@@ -21,6 +22,7 @@ interface NavbarProps {
   onOpenSettings: () => void;
   onOpenAlerts: () => void;
   onOpenInspector: () => void;
+  onOpenDeploy: () => void;
 }
 
 export function Navbar({
@@ -32,6 +34,7 @@ export function Navbar({
   onOpenSettings,
   onOpenAlerts,
   onOpenInspector,
+  onOpenDeploy,
 }: NavbarProps) {
   const isBotConfigured = settings.hasTokenConfigured && settings.hasChatIdConfigured;
 
@@ -169,6 +172,16 @@ export function Navbar({
               title="Telegram & tracker settings"
             >
               <SettingsIcon className="w-4 h-4" />
+            </button>
+
+            {/* Cloud Deployment Button */}
+            <button
+              onClick={onOpenDeploy}
+              className="p-2 sm:px-2.5 sm:py-2 text-xs font-medium text-indigo-700 bg-indigo-50/80 hover:bg-indigo-100/80 border border-indigo-200/80 rounded-lg transition-colors flex items-center gap-1.5"
+              title="Serverless Cloud Deployment (Google Cloud Run, Railway, Render)"
+            >
+              <Cloud className="w-4 h-4 text-indigo-600" />
+              <span className="hidden xl:inline">Cloud Deploy</span>
             </button>
 
             {/* Primary Add Cube Button */}

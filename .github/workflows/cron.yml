@@ -1,0 +1,37 @@
+name: Automated Cubelelo Price Check (Serverless Cron)
+
+on:
+  schedule:
+    # Runs every 30 minutes (UTC)
+    - cron: '*/30 * * * *'
+  workflow_dispatch: # Allows manual trigger from GitHub Actions tab
+
+jobs:
+  check-prices:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Serverless Price Check
+        env:
+          APP_URL: ${{ secrets.APP_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          if [ -z "$APP_URL" ]; then
+            echo "APP_URL secret is not set. Please set your deployed app URL in GitHub repository secrets."
+            exit 1
+          fi
+          
+          # Remove trailing slash if present
+          CLEAN_URL="${APP_URL%/}"
+          
+          echo "Triggering automated price check at $CLEAN_URL/api/cron/check..."
+          
+          if [ -n "$CRON_SECRET" ]; then
+            RESPONSE=$(curl -s -X POST "$CLEAN_URL/api/cron/check" \
+              -H "Authorization: Bearer $CRON_SECRET" \
+              -H "Content-Type: application/json")
+          else
+            RESPONSE=$(curl -s -X POST "$CLEAN_URL/api/cron/check" \
+              -H "Content-Type: application/json")
+          fi
+          
+          echo "Response: $RESPONSE"

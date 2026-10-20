@@ -7,7 +7,8 @@ import { SettingsModal } from './components/SettingsModal.tsx';
 import { AlertsModal } from './components/AlertsModal.tsx';
 import { PriceHistoryModal } from './components/PriceHistoryModal.tsx';
 import { ScraperInspectorModal } from './components/ScraperInspectorModal.tsx';
-import { TrackedProduct, TrackerSettings, AlertLog } from './types.ts';
+import { CloudDeployModal } from './components/CloudDeployModal.tsx';
+import type { TrackedProduct, TrackerSettings, AlertLog } from './types.ts';
 import {
   Search,
   Filter,
@@ -50,6 +51,7 @@ export default function App() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isAlertsOpen, setIsAlertsOpen] = useState(false);
   const [isInspectorOpen, setIsInspectorOpen] = useState(false);
+  const [isDeployOpen, setIsDeployOpen] = useState(false);
   const [historyProduct, setHistoryProduct] = useState<TrackedProduct | null>(null);
 
   // Toast notification
@@ -382,6 +384,7 @@ export default function App() {
         onOpenSettings={() => setIsSettingsOpen(true)}
         onOpenAlerts={() => setIsAlertsOpen(true)}
         onOpenInspector={() => setIsInspectorOpen(true)}
+        onOpenDeploy={() => setIsDeployOpen(true)}
       />
 
       {/* Main Container */}
@@ -605,6 +608,12 @@ export default function App() {
       <ScraperInspectorModal
         isOpen={isInspectorOpen}
         onClose={() => setIsInspectorOpen(false)}
+      />
+
+      <CloudDeployModal
+        isOpen={isDeployOpen}
+        onClose={() => setIsDeployOpen(false)}
+        botUsername={settings.botUsername}
       />
     </div>
   );
